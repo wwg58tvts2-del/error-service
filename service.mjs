@@ -6,10 +6,14 @@ import rout    from './rout/rout.mjs'
 
 console.clear()
 api.env.load()
+
+// 📝 Standardwerte für ENV-Variablen setzen (NACH api.env.load())
+process.env.SERVER_PORT = process.env.SERVER_PORT || '8087'
+
 api.error.setCacheErrorConfig()
 
 const app = express()
-const SERVER_PORT = process.env.SERVER_PORT || 8087
+const SERVER_PORT = parseInt(process.env.SERVER_PORT)
 
 app.set('view engine', 'ejs')
 app.set('views', ['views'])
