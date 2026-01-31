@@ -15,8 +15,6 @@ api.env.setEnvDefaults('SERVER_PORT')
 api.error.setCacheErrorConfig()
 
 const app = express()
-const SERVER_PORT = parseInt(process.env.SERVER_PORT)
-
 app.set('view engine', 'ejs')
 app.set('views', ['views'])
 
@@ -62,7 +60,7 @@ app.use((req, res) => {
 
 // 🚀 Server starten
 const service = http.createServer(app)
-service.listen(SERVER_PORT, (err) => {
+service.listen(process.env?.SERVER_PORT, (err) => {
 	if (err) {
 		api.log.error('Server läuft: ❌')
 		api.log.error('Fehler:', err)
@@ -70,6 +68,6 @@ service.listen(SERVER_PORT, (err) => {
 	}
 
 	api.log.info('Server läuft: ✅')
-	api.log.info('Server Port:', SERVER_PORT)
-	api.log.info('URL:', `http://localhost:${SERVER_PORT}/error`)
+	api.log.info('Server Port:', process.env?.SERVER_PORT)
+	api.log.info('URL:', `http://localhost:${process.env?.SERVER_PORT}/error`)
 })
