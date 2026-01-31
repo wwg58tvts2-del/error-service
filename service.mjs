@@ -1,14 +1,16 @@
 // 📂 Datei: oidc-service.mjs
 import express from 'express'
-import http    from 'http'
-import api     from './res/api.mjs'
-import rout    from './rout/rout.mjs'
+import http from 'http'
+import api from './res/api.mjs'
+import rout from './rout/rout.mjs'
 
 console.clear()
-api.env.load()
+// ENV laden
+api.env.loadEnvFile()
 
-// 📝 Standardwerte für ENV-Variablen setzen (NACH api.env.load())
-process.env.SERVER_PORT = process.env.SERVER_PORT || '8087'
+// 📝 Standardwerte für ENV-Variablen setzen und als Default markieren
+api.env.setEnvVar('SERVER_PORT', '8087')
+api.env.setEnvDefaults('SERVER_PORT')
 
 api.error.setCacheErrorConfig()
 
@@ -18,45 +20,56 @@ const SERVER_PORT = parseInt(process.env.SERVER_PORT)
 app.set('view engine', 'ejs')
 app.set('views', ['views'])
 
-app.use('/error', express.static("public"))
+app.use('/error', express.static('public'))
 
-app.get(`/error/:code`, (req, res) => {
-    const errorJson = api.error.getCacheErrorConfig()
-    let code        = req.params.code
+app.get(`/error/:code`, (req, res, next) => {
+	// Wenn die Route /error/config ist, an die nächste Middleware weitergeben
+	if (req.params.code === 'config') {
+		return next()
+	}
 
-    api.log.info('Fehlercode', code)
-    api.log.infoTable(errorJson)
+	const errorJson = api.error.getCacheErrorConfig()
+	let code = req.params.code
 
-    let text = errorJson[code]
+	api.log.info('Fehlercode', code)
+	api.log.infoTable(errorJson)
 
-    if(!text)
-    {
-        code = 404
-        text = errorJson[code]
-    }
+	let text = errorJson[code]
 
-    res.status(200).render('./error', {code, text})
+	if (!text) {
+		code = 404
+		text = errorJson[code]
+	}
+
+	res.status(200).render('./error', { code, text })
 })
 
 // 🔐 Auth für OIDC
-if(process.env?.AUTH_ON && process.env?.AUTH_JWT_SECRET && process.env?.AUTH_URL)
-{
-    app.use(rout.auth.get())
+if (
+	process.env?.AUTH_ON === 'true' &&
+	process.env?.AUTH_JWT_SECRET &&
+	process.env?.AUTH_URL
+) {
+	app.use(rout.auth.get())
 }
 
-app.use(`/start/config`,  rout.config.get())
+app.use(`/error/config`, rout.config.get())
+
+// Fallback für nicht gefundene Routen → Fehlerseite 404
+app.use((req, res) => {
+	res.redirect('/error/404')
+})
 
 // 🚀 Server starten
 const service = http.createServer(app)
 service.listen(SERVER_PORT, (err) => {
-    if (err) 
-    {
-        api.log.error('Server läuft: ❌')
-        api.log.error('Fehler:', err)
-        process.exit(1)
-    }
+	if (err) {
+		api.log.error('Server läuft: ❌')
+		api.log.error('Fehler:', err)
+		process.exit(1)
+	}
 
-    api.log.info('Server läuft: ✅')
-    api.log.info('Server Port:', SERVER_PORT)
-    api.log.info('URL:', `http://localhost:${SERVER_PORT}/error`)
+	api.log.info('Server läuft: ✅')
+	api.log.info('Server Port:', SERVER_PORT)
+	api.log.info('URL:', `http://localhost:${SERVER_PORT}/error`)
 })
