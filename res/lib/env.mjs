@@ -89,3 +89,10 @@ export function setEnvVar(key, value) {
 export function setEnvDefaults(key) {
 	defaultEnvFile.push(key)
 }
+
+// -------------------------------------------------------------
+// Prüfen ob Datei existiert
+// -------------------------------------------------------------
+export function fileExists(filePath) {
+	return fs.existsSync(filePath)
+}

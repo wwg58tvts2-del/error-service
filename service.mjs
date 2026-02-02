@@ -12,6 +12,16 @@ api.env.loadEnvFile()
 api.env.setEnvVar('SERVER_PORT', '8087')
 api.env.setEnvDefaults('SERVER_PORT')
 
+api.env.setEnvVar('APP_NAME', 'Default-Error')
+api.env.setEnvDefaults('APP_NAME')
+
+// .env Datei erstellen falls nicht vorhanden
+const envPath = path.join(process.cwd(), '.env')
+if (!api.env.fileExists(envPath)) {
+	api.log.info('.env nicht gefunden, erstelle neue .env mit Defaults...')
+	api.env.saveEnvFile(api.env.getEnvVar())
+}
+
 api.error.setCacheErrorConfig()
 
 const app = express()
