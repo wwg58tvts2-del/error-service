@@ -1,6 +1,7 @@
 // 📂 Datei: oidc-service.mjs
 import express from 'express'
 import http from 'http'
+import path from 'path'
 import api from './res/api.mjs'
 import rout from './rout/rout.mjs'
 
@@ -14,6 +15,9 @@ api.env.setEnvDefaults('SERVER_PORT')
 
 api.env.setEnvVar('APP_NAME', 'Default-Error')
 api.env.setEnvDefaults('APP_NAME')
+
+api.env.setEnvVar('ERROR_CONFIG_PATH', 'error.json')
+api.env.setEnvDefaults('ERROR_CONFIG_PATH')
 
 // .env Datei erstellen falls nicht vorhanden
 const envPath = path.join(process.cwd(), '.env')
