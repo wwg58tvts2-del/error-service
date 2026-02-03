@@ -58,6 +58,12 @@ app.get(`/error/:code`, (req, res, next) => {
 		text = errorJson[code]
 	}
 
+	// Content Negotiation: JSON oder HTML
+	const acceptHeader = req.headers.accept || ''
+	if (acceptHeader.includes('application/json')) {
+		return res.status(Number(code) || 404).json({ code, text })
+	}
+
 	res.status(200).render('./error', { code, text })
 })
 

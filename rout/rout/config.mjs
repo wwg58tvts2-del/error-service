@@ -11,6 +11,18 @@ export const get = function () {
 
 app.use(express.json())
 
+// Content Negotiation Middleware
+app.use((req, res, next) => {
+	const acceptHeader = req.headers.accept || ''
+
+	// Wenn kein JSON gewünscht → überspringe diesen Router komplett
+	if (!acceptHeader.includes('application/json')) {
+		return next('router')
+	}
+
+	next()
+})
+
 // 👉 GET /config
 app.get('/', (req, res) => {
 	try {
