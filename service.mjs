@@ -12,7 +12,8 @@ api.env.loadEnvFile()
 // 📝 Standardwerte für ENV-Variablen setzen und als Default markieren
 api.env.setEnvVar('SERVER_PORT', '8087')
 api.env.setEnvDefaults('SERVER_PORT')
-
+api.env.setEnvVar('AUTH_JWT_SECRET', 'default-secret-change-in-production')
+api.env.setEnvDefaults('AUTH_JWT_SECRET')
 api.env.setEnvVar('APP_NAME', 'Default-Error')
 api.env.setEnvDefaults('APP_NAME')
 
