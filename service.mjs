@@ -2,9 +2,17 @@
 import express from 'express'
 import http from 'http'
 import path from 'path'
+import { fileURLToPath } from 'url'
 import os from 'os'
 import api from './res/api.mjs'
 import rout from './rout/rout.mjs'
+
+// 🔧 Dateipfade ermitteln
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+console.log('DEBUG __dirname:', __dirname)
+console.log('DEBUG process.cwd():', process.cwd())
 
 // Hilfsfunktion: Lokale IP-Adresse ermitteln
 function getLocalIP() {
