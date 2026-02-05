@@ -2,8 +2,22 @@
 import express from 'express'
 import http from 'http'
 import path from 'path'
+import os from 'os'
 import api from './res/api.mjs'
 import rout from './rout/rout.mjs'
+
+// Hilfsfunktion: Lokale IP-Adresse ermitteln
+function getLocalIP() {
+	const interfaces = os.networkInterfaces()
+	for (const name of Object.keys(interfaces)) {
+		for (const iface of interfaces[name]) {
+			if (iface.family === 'IPv4' && !iface.internal) {
+				return iface.address
+			}
+		}
+	}
+	return 'localhost'
+}
 
 console.clear()
 // ENV laden
@@ -92,7 +106,9 @@ service.listen(process.env?.SERVER_PORT, (err) => {
 		process.exit(1)
 	}
 
+	const localIP = getLocalIP()
 	api.log.info('Server läuft: ✅')
 	api.log.info('Server Port:', process.env?.SERVER_PORT)
 	api.log.info('URL:', `http://localhost:${process.env?.SERVER_PORT}/error`)
+	api.log.info('URL:', `http://${localIP}:${process.env?.SERVER_PORT}/error`)
 })
