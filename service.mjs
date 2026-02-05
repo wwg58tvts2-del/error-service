@@ -11,8 +11,8 @@ import rout from './rout/rout.mjs'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-console.log('DEBUG __dirname:', __dirname)
-console.log('DEBUG process.cwd():', process.cwd())
+api.log.info('DEBUG __dirname:', __dirname)
+api.log.info('DEBUG process.cwd():', process.cwd())
 
 // Hilfsfunktion: Lokale IP-Adresse ermitteln
 function getLocalIP() {
@@ -28,23 +28,17 @@ function getLocalIP() {
 }
 
 console.clear()
-// ENV laden
-api.env.loadEnvFile(__dirname)
 
 // 📝 Standardwerte für ENV-Variablen setzen und als Default markieren
-api.env.setEnvVar('SERVER_PORT', '8087')
-api.env.setEnvDefaults('SERVER_PORT')
-api.env.setEnvVar('AUTH_JWT_SECRET', 'default-secret-change-in-production')
-api.env.setEnvDefaults('AUTH_JWT_SECRET')
-api.env.setEnvVar('APP_NAME', 'Default-Error')
-api.env.setEnvDefaults('APP_NAME')
-api.env.setEnvVar('AUTH_ON', 'false')
-api.env.setEnvDefaults('AUTH_ON')
-api.env.setEnvVar('AUTH_URL', '/auth')
-api.env.setEnvDefaults('AUTH_URL')
+api.env.setEnvDefaults('SERVER_PORT', '8087')
+api.env.setEnvDefaults('AUTH_JWT_SECRET', 'default-secret-change-in-production')
+api.env.setEnvDefaults('APP_NAME', 'Default-Error')
+api.env.setEnvDefaults('AUTH_ON', 'false')
+api.env.setEnvDefaults('AUTH_URL', '/auth')
+api.env.setEnvDefaults('ERROR_CONFIG_PATH', 'error.json')
 
-api.env.setEnvVar('ERROR_CONFIG_PATH', 'error.json')
-api.env.setEnvDefaults('ERROR_CONFIG_PATH')
+// ENV laden
+api.env.loadEnvFile(__dirname)
 
 // .env Datei erstellen falls nicht vorhanden
 const envPath = path.join(__dirname, '.env')

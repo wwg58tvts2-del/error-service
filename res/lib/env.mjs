@@ -86,7 +86,8 @@ export function setEnvVar(key, value) {
 // -------------------------------------------------------------
 // ENV-Variable auf Default setzen, falls nicht vorhanden
 // -------------------------------------------------------------
-export function setEnvDefaults(key) {
+export function setEnvDefaults(key, value) {
+	process.env[key] = value
 	defaultEnvFile.push(key)
 }
 
