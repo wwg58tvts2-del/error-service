@@ -21,7 +21,7 @@ function getLocalIP() {
 
 console.clear()
 // ENV laden
-api.env.loadEnvFile()
+api.env.loadEnvFile(__dirname)
 
 // 📝 Standardwerte für ENV-Variablen setzen und als Default markieren
 api.env.setEnvVar('SERVER_PORT', '8087')
@@ -39,10 +39,10 @@ api.env.setEnvVar('ERROR_CONFIG_PATH', 'error.json')
 api.env.setEnvDefaults('ERROR_CONFIG_PATH')
 
 // .env Datei erstellen falls nicht vorhanden
-const envPath = path.join(process.cwd(), '.env')
+const envPath = path.join(__dirname, '.env')
 if (!api.env.fileExists(envPath)) {
 	api.log.info('.env nicht gefunden, erstelle neue .env mit Defaults...')
-	api.env.saveEnvFile(api.env.getEnvVar())
+	api.env.saveEnvFile(api.env.getEnvVar(), __dirname)
 }
 
 api.error.setCacheErrorConfig()

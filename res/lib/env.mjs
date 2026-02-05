@@ -11,8 +11,8 @@ const defaultEnvFile = []
 // -------------------------------------------------------------
 // ENV-Datei laden und in process.env schreiben
 // -------------------------------------------------------------
-export function loadEnvFile(filename = '.env') {
-	const envPath = path.resolve(process.cwd(), filename)
+export function loadEnvFile(baseDir = null, filename = '.env') {
+	const envPath = path.resolve(baseDir || process.cwd(), filename)
 	if (!fs.existsSync(envPath)) {
 		api.log.info(`.env-Datei nicht gefunden: ${envPath}`)
 		return
@@ -36,8 +36,8 @@ export function loadEnvFile(filename = '.env') {
 // -------------------------------------------------------------
 // ENV-Datei speichern (Objekt -> Datei)
 // -------------------------------------------------------------
-export function saveEnvFile(config = {}, filename = '.env') {
-	const envPath = path.resolve(process.cwd(), filename)
+export function saveEnvFile(config = {}, baseDir = null, filename = '.env') {
+	const envPath = path.resolve(baseDir || process.cwd(), filename)
 	if (typeof config !== 'object' || config === null) {
 		throw new Error('config muss ein Objekt sein')
 	}
