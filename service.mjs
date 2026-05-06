@@ -55,9 +55,16 @@ app.set('views', ['views'])
 
 app.use('/error', express.static('public'))
 
+// � Redirect /error und /error/ → Vue Admin SPA
+app.get(['/error', '/error/'], (req, res) => res.redirect('/error/app/'))
+
+// �🖥️ Vue SPA Admin-Oberfläche
+const vueDistPath = path.join(__dirname, 'dist')
+app.use('/error/app', express.static(vueDistPath))
+
 app.get(`/error/:code`, (req, res, next) => {
-	// Wenn die Route /error/config ist, an die nächste Middleware weitergeben
-	if (req.params.code === 'config') {
+	// Diese Routen an nachfolgende Middleware weitergeben
+	if (['config', 'app', 'errors', 'schema', 'env'].includes(req.params.code)) {
 		return next()
 	}
 
@@ -93,7 +100,14 @@ if (
 }
 
 app.use(`/error/config`, rout.config.get())
+app.use(`/error/errors`, rout.errors.get())
+app.get(`/error/env`, (req, res) => res.json(api.env.getEnvVar()))
 app.get(`/error/schema`, (req, res) => res.sendFile(path.join(__dirname, 'env.schema.json')))
+
+// SPA Fallback für /error/app/*
+app.get(/^\/error\/app(\/.*)?$/, (req, res) => {
+	res.sendFile(path.join(vueDistPath, 'index.html'))
+})
 
 // Fallback für nicht gefundene Routen → Fehlerseite 404
 app.use((req, res) => {
