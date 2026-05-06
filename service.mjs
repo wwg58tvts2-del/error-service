@@ -93,6 +93,7 @@ if (
 }
 
 app.use(`/error/config`, rout.config.get())
+app.get(`/error/schema`, (req, res) => res.sendFile(path.join(__dirname, 'env.schema.json')))
 
 // Fallback für nicht gefundene Routen → Fehlerseite 404
 app.use((req, res) => {
