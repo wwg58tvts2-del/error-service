@@ -237,6 +237,8 @@ onUnmounted(() => {
 }
 .sb-item.create { color: #16a34a; }
 .sb-item.create:hover { background: #dcfce7; color: #15803d; }
+.sb-item:hover { background: #eff6ff; color: #1d4ed8; }
+.sb-item.active { color: #2563eb; font-weight: 600; background: #eff6ff; }
 .si { font-size: 14px; flex-shrink: 0; }
 .sb-flyout {
 	background: #ffffff;
@@ -276,5 +278,6 @@ onUnmounted(() => {
 }
 .flyout-item.create { color: #16a34a; }
 .flyout-item.create:hover { background: #dcfce7; color: #15803d; }
+.flyout-item.active { color: #2563eb; font-weight: 600; background: #eff6ff; }
 .flyout-item i { font-size: 16px; flex-shrink: 0; }
 </style>

@@ -112,7 +112,7 @@
 					<!-- Tabellen-Ansicht -->
 					<div v-else-if="viewMode === 'table'" class="card shadow-sm">
 						<div class="table-responsive">
-							<table class="table table-hover table-striped mb-0">
+							<table class="table table-hover mb-0">
 								<thead>
 									<tr>
 										<th style="width:100px">Code</th>
