@@ -4,7 +4,7 @@
 		<ErrorListSidebar v-model:viewMode="viewMode" />
 		<main class="container-fluid" style="padding-right: 68px">
 			<div class="row justify-content-center pt-5">
-				<div class="col-lg-10 col-xl-8">
+				<div class="col-12 col-xl-11 col-xxl-10">
 
 					<!-- Header Card -->
 					<div class="card shadow-sm mb-4">

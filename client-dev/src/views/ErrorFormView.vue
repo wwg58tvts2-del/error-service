@@ -4,7 +4,7 @@
 		<ErrorFormSidebar @back="goBack" @save="onSubmit" />
 		<main class="container-fluid" style="padding-right: 68px">
 			<div class="row justify-content-center pt-5">
-				<div class="col-lg-8 col-xl-6">
+				<div class="col-12 col-xl-11 col-xxl-10">
 
 					<div class="card shadow-sm">
 						<div class="card-header bg-white d-flex align-items-center gap-2">
