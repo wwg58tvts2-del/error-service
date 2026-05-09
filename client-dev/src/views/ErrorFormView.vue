@@ -1,7 +1,7 @@
 <template>
 	<div class="container-fluid p-0">
 		<Navbar />
-		<ErrorFormSidebar @back="goBack" @save="onSubmit" />
+		<ErrorFormSidebar @back="goBack" @save="onSubmit" @cancel="onCancel" />
 		<main class="container-fluid" style="padding-right: 68px">
 			<div class="row justify-content-center pt-5">
 				<div class="col-12 col-xl-11 col-xxl-10">
@@ -178,6 +178,14 @@ async function onSubmit() {
 
 function goBack() {
 	router.push('/')
+}
+
+function onCancel() {
+	if (isEdit.value) {
+		loadEntry()
+	} else {
+		goBack()
+	}
 }
 
 onMounted(() => {

@@ -9,61 +9,42 @@
 
 		<div class="sb-sep" />
 
-		<!-- Gruppe: Navigation -->
-		<div class="sb-group" :ref="el => { navRef = el }">
-			<button v-if="!isExpanded" class="sb-icon"
-				:class="{ 'flyout-open': openFlyout === 'nav' }"
-				@click="toggleFlyout('nav')" title="Navigation">
-				<i class="bi bi-compass"></i>
-			</button>
-			<button v-if="isExpanded" class="sb-group-hd"
-				:class="{ open: openGroups.nav }"
-				@click="openGroups.nav = !openGroups.nav">
-				<i class="bi bi-compass gh-icon"></i>
-				<span class="gh-label">Navigation</span>
-				<i class="bi gh-chev" :class="openGroups.nav ? 'bi-chevron-down' : 'bi-chevron-left'"></i>
-			</button>
-			<div v-if="isExpanded && openGroups.nav" class="sb-group-body">
-				<button class="sb-item" @click="$emit('back')">
-					<i class="bi bi-arrow-left si"></i><span>Zurück</span>
-				</button>
-			</div>
-			<Teleport to="body">
-				<div class="sb-flyout" v-show="!isExpanded && openFlyout === 'nav'" :style="flyoutStyle('nav', navRef)">
-					<div class="flyout-title">Navigation</div>
-					<button class="flyout-item" @click="$emit('back'); openFlyout = null">
-						<i class="bi bi-arrow-left"></i><span>Zurück</span>
-					</button>
-				</div>
-			</Teleport>
-		</div>
-
-		<div class="sb-sep" />
-
 		<!-- Gruppe: Aktionen -->
 		<div class="sb-group" :ref="el => { actionRef = el }">
 			<button v-if="!isExpanded" class="sb-icon create"
 				:class="{ 'flyout-open': openFlyout === 'action' }"
-				@click="toggleFlyout('action')" title="Speichern">
-				<i class="bi bi-floppy"></i>
+				@click="toggleFlyout('action')" title="Aktionen">
+				<i class="bi bi-three-dots-vertical"></i>
 			</button>
 			<button v-if="isExpanded" class="sb-group-hd"
 				:class="{ open: openGroups.action }"
 				@click="openGroups.action = !openGroups.action">
-				<i class="bi bi-floppy gh-icon text-success"></i>
+				<i class="bi bi-three-dots-vertical gh-icon text-success"></i>
 				<span class="gh-label">Aktionen</span>
 				<i class="bi gh-chev" :class="openGroups.action ? 'bi-chevron-down' : 'bi-chevron-left'"></i>
 			</button>
 			<div v-if="isExpanded && openGroups.action" class="sb-group-body">
-				<button class="sb-item create" @click="$emit('save')">
-					<i class="bi bi-floppy si"></i><span>Speichern</span>
+				<button class="sb-item" @click="$emit('back')">
+					<i class="bi bi-arrow-left si"></i><span>Zurück</span>
+				</button>
+				<button class="sb-item save" @click="$emit('save')">
+					<i class="bi bi-check-lg si"></i><span>Speichern</span>
+				</button>
+				<button class="sb-item" @click="$emit('cancel')">
+					<i class="bi bi-x-lg si"></i><span>Abbrechen</span>
 				</button>
 			</div>
 			<Teleport to="body">
 				<div class="sb-flyout" v-show="!isExpanded && openFlyout === 'action'" :style="flyoutStyle('action', actionRef)">
 					<div class="flyout-title">Aktionen</div>
-					<button class="flyout-item create" @click="$emit('save'); openFlyout = null">
-						<i class="bi bi-floppy"></i><span>Speichern</span>
+					<button class="flyout-item" @click="$emit('back'); openFlyout = null">
+						<i class="bi bi-arrow-left"></i><span>Zurück</span>
+					</button>
+					<button class="flyout-item save" @click="$emit('save'); openFlyout = null">
+						<i class="bi bi-check-lg"></i><span>Speichern</span>
+					</button>
+					<button class="flyout-item" @click="$emit('cancel'); openFlyout = null">
+						<i class="bi bi-x-lg"></i><span>Abbrechen</span>
 					</button>
 				</div>
 			</Teleport>
@@ -75,12 +56,11 @@
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 
-defineEmits(['back', 'save'])
+defineEmits(['back', 'save', 'cancel'])
 
 const isExpanded = ref(false)
 const openFlyout = ref(null)
-const openGroups = reactive({ nav: true, action: true })
-const navRef     = ref(null)
+const openGroups = reactive({ action: true })
 const actionRef  = ref(null)
 
 function flyoutStyle(name, el) {
@@ -164,9 +144,10 @@ onUnmounted(() => {
 	cursor: pointer; font-size: 0.875rem; white-space: nowrap; text-decoration: none;
 	transition: background 0.15s, color 0.15s;
 }
-.sb-item:hover { background: #eff6ff; color: #1d4ed8; }
-.sb-item.create { color: #16a34a; }
-.sb-item.create:hover { background: #dcfce7; color: #15803d; }
+.sb-item:hover:not(:disabled) { background: #eff6ff; color: #1d4ed8; }
+.sb-item:disabled { opacity: 0.4; cursor: not-allowed; }
+.sb-item.save { color: #16a34a; }
+.sb-item.save:hover:not(:disabled) { background: #dcfce7; color: #15803d; }
 .si { font-size: 14px; flex-shrink: 0; }
 .sb-flyout {
 	background: #fff; border-radius: 10px 0 0 10px;
@@ -185,8 +166,9 @@ onUnmounted(() => {
 	cursor: pointer; font-size: 0.875rem; text-align: left; white-space: nowrap;
 	text-decoration: none; transition: background 0.15s, color 0.15s;
 }
-.flyout-item:hover { background: #eff6ff; color: #2563eb; }
-.flyout-item.create { color: #16a34a; }
-.flyout-item.create:hover { background: #dcfce7; color: #15803d; }
+.flyout-item:hover:not(:disabled) { background: #eff6ff; color: #1d4ed8; }
+.flyout-item:disabled { opacity: 0.4; cursor: not-allowed; }
+.flyout-item.save { color: #16a34a; }
+.flyout-item.save:hover:not(:disabled) { background: #dcfce7; color: #15803d; }
 .flyout-item i { font-size: 16px; flex-shrink: 0; }
 </style>
